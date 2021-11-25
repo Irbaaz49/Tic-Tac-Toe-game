@@ -7,6 +7,7 @@ let gameOver = new Audio("img/gameover.mp3");
 
 let turn = "X";
 
+let isGameOver =false;
 
 const changeTurn = ()=>{
     return turn === "X"?"0":"X"
@@ -24,10 +25,11 @@ const checkWin = () =>{
         [2,5,8]
         [0,4,8],
         [2,4,6],    ]
-wins.forEach(e=>{
+wins.forEach (e=>{
     let boxtexts = document.getElementsByClassName('boxText');
     if((boxtexts[e[0]].innerText === boxtexts[e[1]].innerText)&&(boxtexts[e[2]].innerText === boxtexts[e[1]].innerText)&&(boxtexts[e[0]].innerText !== "")){
         document.querySelector('.info').innerText = boxtexts[e[0]].innerText + "WON"
+        isGameOver = true;
     }
 
 })
