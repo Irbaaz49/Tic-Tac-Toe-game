@@ -1,50 +1,141 @@
-console.log("hello");
+const selectBox = document.querySelector('.select-box');
+const selectXBtn = document.querySelector('.playerX');
+const selectOBtn = document.querySelector('.playerY');
+const playBoard = document.querySelector('.play-board');
+const allBox = document.querySelectorAll('section span');
+const players = document.querySelector(".players");
+const resultBox =document.querySelector(".result-box"),
+wonText = resultBox.querySelector(".won-text"),
+replayBtn = resultBox.querySelector("button");
 
-let music = new Audio('music.mp3');
-let audioTurn =new Audio("img/ting.mp3")
-let gameOver = new Audio("img/gameover.mp3");
+// console.log(selectBox,selectOBtn,selectXBtn);
 
-let turn = "X";
 
-let isGameOver =false;
+window.onload = () => { // once window is loaded
 
-const changeTurn = ()=>{
-    return turn === "X"?"0":"X"
-}
+    for (let i = 0; i < allBox.length; i++) {
+        console.log("this")
+        allBox[i].setAttribute("onclick", "clickedBox(this)")
 
-const checkWin = () =>{
-    let boxtexts = document.getElementsByClassName('boxText');
-    console.log(boxtexts)
-    let wins = [
-        [0,1,2],
-        [3,4,5],
-        [6,7,8],
-        [0,3,6],
-        [1,4,7],
-        [2,5,8]
-        [0,4,8],
-        [2,4,6],    ]
-wins.forEach (e=>{
-    let boxtexts = document.getElementsByClassName('boxText');
-    if((boxtexts[e[0]].innerText === boxtexts[e[1]].innerText)&&(boxtexts[e[2]].innerText === boxtexts[e[1]].innerText)&&(boxtexts[e[0]].innerText !== "")){
-        document.querySelector('.info').innerText = boxtexts[e[0]].innerText + "WON"
-        isGameOver = true;
     }
 
-})
+
+
+
+    selectXBtn.addEventListener('click', function () {
+        selectBox.classList.add("hide");   // hide the select box after choosing the character
+        playBoard.classList.add("show")
+
+    })
+    selectOBtn.addEventListener('click', function () {
+        selectBox.classList.add("hide");   // hide the select box after choosing the character
+        playBoard.classList.add("show");
+        players.setAttribute("class", "players active player");
+
+    })
 }
 
-let boxes =document.getElementsByClassName("box");
-
-Array.from(boxes).forEach(element =>{
-    let boxtext = element.querySelector('.boxText');
-element.addEventListener('click', ()=>{
-    if(boxtext.innerText === ''){
-        boxtext.innerText = turn;
-        turn = changeTurn();
-        audioTurn.play();
-        checkWin();
-        document.getElementsByClassName("info")[0].innerText = 'Turn for' + turn;
+let playerXIcon = "X"; // class name of fontawsome cross icon
+let playerOIcon = "O"; //class name of fontawsome circle icon
+let playerSign = "X";
+runBot =true;
+function clickedBox(element) {
+    // console.log(element)
+    if (players.classList.contains("player")) {
+       playerSign = "O";
+        element.innerHTML = `<i>${playerOIcon}</i>`;
+        players.classList.remove("active");
+        element.setAttribute("id",playerSign);
     }
-})
-})
+    else {
+        element.innerHTML = `<i>${playerXIcon}</i>`;
+        element.setAttribute("id",playerSign);
+        players.classList.add("active");
+    }
+    selectWinner();
+    element.style.pointerEvents = "none";
+    playBoard.style.pointerEvents = "none";
+    let randomDelaytime = ((Math.random() * 1000) + 200).toFixed(); //generating random time delay so bot will delay randomly to select the box
+    console.log(randomDelaytime);
+    setTimeout(()=>{
+        bot(runBot);//calling bot function 
+    },randomDelaytime)// passing random delay time
+}
+
+
+
+function bot() {
+    let array = [];
+    if(runBot){
+        playerSign = "O";
+
+    for (let i = 0; i < allBox.length; i++) {
+        if (allBox[i].childElementCount == 0) {
+            array.push(i);
+            console.log(i + " " + "has no children")
+        }
+
+    }
+    let randomBox = array[Math.floor(Math.random() * array.length)]; // getting random index from array so bot will select random unselected box
+    if (array.length > 0) {
+        if (players.classList.contains("player")) {
+            playerSign = "X";
+            allBox[randomBox].innerHTML = `<i>${playerXIcon}</i>`;
+            allBox[randomBox].setAttribute("id", playerSign);
+            players.classList.add("active");
+        
+        }
+        else {
+            allBox[randomBox].innerHTML = `<i>${playerOIcon}</i>`;
+            players.classList.remove("active");
+            allBox[randomBox].setAttribute("id", playerSign);
+        }
+        selectWinner();
+
+    }
+    allBox[randomBox].style.pointerEvents = "none";
+    playBoard.style.pointerEvents = "auto";
+    playerSign = "X";
+}
+}
+
+function getIdVal(classname){
+    return document.querySelector(".box" + classname).id;
+
+}
+
+function checkIdSign(val1, val2, val3, sign){
+    if(getIdVal(val1) == sign && getIdVal(val2) == sign && getIdVal(val3) == sign){
+        return true;
+    }
+}
+
+function selectWinner(){
+    if(checkIdSign(1,2,3, playerSign) || checkIdSign(4,5,6,playerSign) || checkIdSign(6,7,8,playerSign) || checkIdSign(1,4,7,playerSign) || checkIdSign(2,5,8,playerSign) || checkIdSign(3,6,9,playerSign) || checkIdSign(1,5,9,playerSign) || checkIdSign(3,5,7,playerSign)){
+       runBot = false;
+       bot(runBot);
+       setTimeout(()=>{
+           resultBox.classList.add("show");
+           playBoard.classList.remove("show");
+       },700);
+       wonText.innerHTML = `Player<p>${playerSign}</p> won the game!`;
+        // console.log(playerSign + " " + "is the winner")
+    
+
+    } 
+    else{
+        if(getIdVal(1) != "" && getIdVal(2) != "" && getIdVal(3) != "" && getIdVal(4) != "" && getIdVal(5) != "" && getIdVal(6) != "" && getIdVal(7) != "" && getIdVal(8) != "" && getIdVal(9) != ""){
+            runBot =false;
+            bot(runBot);
+            setTimeout(()=>{
+                resultBox.classList.add(".show");
+                playBoard.classList.remove("show");
+
+            },700);
+            wonText.textContent = "Match has been drawn!";
+        }
+    }
+}
+replayBtn.onclick = ()=>{
+    window.location.reload();
+}
