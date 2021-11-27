@@ -111,12 +111,14 @@ function checkIdSign(val1, val2, val3, sign){
 }
 
 function selectWinner(){
-    if(checkIdSign(1,2,3, playerSign) || checkIdSign(4,5,6,playerSign) || checkIdSign(6,7,8,playerSign) || checkIdSign(1,4,7,playerSign) || checkIdSign(2,5,8,playerSign) || checkIdSign(3,6,9,playerSign) || checkIdSign(1,5,9,playerSign) || checkIdSign(3,5,7,playerSign)){
+    if(checkIdSign(1,2,3, playerSign) || checkIdSign(4,5,6,playerSign) || checkIdSign(7,8,9,playerSign) || checkIdSign(1,4,7,playerSign) || checkIdSign(2,5,8,playerSign) || checkIdSign(3,6,9,playerSign) || checkIdSign(1,5,9,playerSign) || checkIdSign(3,5,7,playerSign)){
        runBot = false;
        bot(runBot);
        setTimeout(()=>{
-           resultBox.classList.add("show");
-           playBoard.classList.remove("show");
+           resultBox.style.display = "flex";
+           playBoard.style.display = "none";
+        //    resultBox.classList.add("show");
+        //    playBoard.classList.remove("show");
        },700);
        wonText.innerHTML = `Player<p>${playerSign}</p> won the game!`;
         // console.log(playerSign + " " + "is the winner")
@@ -128,8 +130,10 @@ function selectWinner(){
             runBot =false;
             bot(runBot);
             setTimeout(()=>{
-                resultBox.classList.add(".show");
-                playBoard.classList.remove("show");
+                resultBox.style.display= "flex";
+                playBoard.style.display = "none";
+                // resultBox.classList.add("show");
+                // playBoard.classList.remove("show");
 
             },700);
             wonText.textContent = "Match has been drawn!";
