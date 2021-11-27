@@ -7,6 +7,11 @@ const players = document.querySelector(".players");
 const resultBox =document.querySelector(".result-box"),
 wonText = resultBox.querySelector(".won-text"),
 replayBtn = resultBox.querySelector("button");
+let clickBOx = new Audio('img/click.wav');
+let drawn = new Audio("img/draw.wav")
+let replay = new Audio("img/repaly.wav")
+let select =new Audio("img/mixkit-retro-game-notification-212.wav")
+let won = new Audio("img/K3RTHA7-game-win-horns.mp3");
 
 // console.log(selectBox,selectOBtn,selectXBtn);
 
@@ -24,13 +29,15 @@ window.onload = () => { // once window is loaded
 
     selectXBtn.addEventListener('click', function () {
         selectBox.classList.add("hide");   // hide the select box after choosing the character
-        playBoard.classList.add("show")
+        playBoard.classList.add("show");
+        select.play();
 
     })
     selectOBtn.addEventListener('click', function () {
         selectBox.classList.add("hide");   // hide the select box after choosing the character
         playBoard.classList.add("show");
         players.setAttribute("class", "players active player");
+        select.play();
 
     })
 }
@@ -40,14 +47,17 @@ let playerOIcon = "O"; //class name of fontawsome circle icon
 let playerSign = "X";
 runBot =true;
 function clickedBox(element) {
+    clickBOx.play();
     // console.log(element)
     if (players.classList.contains("player")) {
+        
        playerSign = "O";
         element.innerHTML = `<i>${playerOIcon}</i>`;
         players.classList.remove("active");
         element.setAttribute("id",playerSign);
     }
     else {
+       
         element.innerHTML = `<i>${playerXIcon}</i>`;
         element.setAttribute("id",playerSign);
         players.classList.add("active");
@@ -120,6 +130,7 @@ function selectWinner(){
         //    resultBox.classList.add("show");
         //    playBoard.classList.remove("show");
        },700);
+       won.play();
        wonText.innerHTML = `Player<p>${playerSign}</p> won the game!`;
         // console.log(playerSign + " " + "is the winner")
     
@@ -136,10 +147,12 @@ function selectWinner(){
                 // playBoard.classList.remove("show");
 
             },700);
+            drawn.play()
             wonText.textContent = "Match has been drawn!";
         }
     }
 }
 replayBtn.onclick = ()=>{
+    replay.play();
     window.location.reload();
 }
