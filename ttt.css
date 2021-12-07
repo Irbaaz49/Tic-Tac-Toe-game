@@ -182,7 +182,7 @@ button:active {
     left: 0;
     width: 50%;
     height: 100%;
-    /* background: green; */
+    background: green;
     border-radius: 5px;
     transition: all 0.3s ease;
 
@@ -330,3 +330,13 @@ button:active {
     left: 0;
 
 }
+
+
+@media screen and (max-width: 480px) {
+    .options button {
+      font-size: 15px;
+    }
+    .select-box{
+        width: 250px;
+    }
+  }
